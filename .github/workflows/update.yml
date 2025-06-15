@@ -2,7 +2,7 @@ name: Daily Update
 
 on:
   schedule:
-    - cron: '0 1 * * *'  # 每天 UTC+1（台灣時間早上 9 點）
+    - cron: '0 1 * * *'  # 每天台灣時間上午9點（UTC+1）
   workflow_dispatch:
 
 jobs:
@@ -25,7 +25,5 @@ jobs:
           git config --global user.email "auto@observer.com"
           git config --global user.name "Observer Bot"
           git add index.html
-          git commit -m "🔄 Daily auto-update"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git commit -m "🔄 Auto-update index.html"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main

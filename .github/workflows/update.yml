@@ -1,0 +1,31 @@
+name: Daily Update
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # 每天 UTC+1（台灣時間早上 9 點）
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run update script
+        run: python generate-index.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "auto@observer.com"
+          git config --global user.name "Observer Bot"
+          git add index.html
+          git commit -m "🔄 Daily auto-update"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
